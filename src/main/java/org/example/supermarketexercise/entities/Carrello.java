@@ -11,7 +11,7 @@ public class Carrello {
         this.products = new ArrayList<>();
     }
 
-    public void addProduct(Product p){
+    public void addProduct(Product p) {
         products.add(p);
     }
 
@@ -20,14 +20,18 @@ public class Carrello {
     }
 
     public void remove(Product product, int quantity) {
-        if(product.getQuantity() <= quantity) {
+        if (product.getQuantity() <= quantity) {
             products.remove(product);
-        }
-        else{
+        } else {
             products = products.stream()
                     .filter(p -> p.getName().equals(product.getName()))
                     .map(p -> {
-                        Product p2 = new Product(p);
+                        Product p2 = Product.ProductBuilder.builder()
+                                .setName(p.getName())
+                                .setPrice(p.getPrice())
+                                .setQuantity(p.getQuantity())
+                                .setReparto(p.getReparto())
+                                .build();
                         p2.setQuantity(p.getQuantity() - quantity);
                         return p2;
                     })

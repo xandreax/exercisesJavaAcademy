@@ -5,7 +5,7 @@ import org.example.supermarketexercise.exceptions.ProductNotFoundException;
 import org.example.supermarketexercise.exceptions.SupermarketNotFoundException;
 import org.example.supermarketexercise.exceptions.TipologiaRepartoNotFoundException;
 import org.example.supermarketexercise.entities.Product;
-import org.example.supermarketexercise.entities.reparti.TipologiaReparto;
+import org.example.supermarketexercise.entities.TipologiaReparto;
 import org.example.supermarketexercise.entities.Supermarket;
 
 import java.util.List;
@@ -77,7 +77,13 @@ public class SupermarketManager {
                 .orElseThrow(() -> new ProductNotFoundException("product not found or not available for this quantity"));
         int actualQuantity = product.getQuantity();
         product.setQuantity(actualQuantity - quantity);
-        Product p = new Product(product.getName(), product.getPrice(), actualQuantity - quantity, product.getReparto());
+        Product p = Product.ProductBuilder
+                .builder()
+                .setName(product.getName())
+                .setPrice(product.getPrice())
+                .setQuantity(actualQuantity - quantity)
+                .setReparto(product.getReparto())
+                .build();
         carrello.addProduct(p);
     }
 

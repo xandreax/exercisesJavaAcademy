@@ -2,10 +2,9 @@ package org.example.supermarketexercise;
 
 import org.example.supermarketexercise.entities.Product;
 import org.example.supermarketexercise.entities.Supermarket;
-import org.example.supermarketexercise.entities.reparti.Macelleria;
-import org.example.supermarketexercise.entities.reparti.Panetteria;
-import org.example.supermarketexercise.entities.reparti.Pescheria;
-import org.example.supermarketexercise.manager.SupermarketPrinter;
+import org.example.supermarketexercise.entities.Reparto;
+import org.example.supermarketexercise.entities.TipologiaReparto;
+import org.example.supermarketexercise.manager.SupermarketUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +29,6 @@ public class SupermarketRunner {
             3) CARRELLO --> L'UTENTE PUò STAMPARE E VEDERE IL SUO CARRELLO
             4) PUò RIMUOVERE UNO O PIù PRODOTTI
             5) CHECKOUT DEL CARRELLO -> STAMPA LISTA PRODOTTI + MOSTRO TOTALE DEI PRODOTTI
-
      */
 
     public static void main(String[] args) {
@@ -40,27 +38,27 @@ public class SupermarketRunner {
         Scanner scanner = new Scanner(System.in);
 
         List<Supermarket> supermarketList = new ArrayList<>();
-        Supermarket s1 = new Supermarket("Coop");
-        Supermarket s2 = new Supermarket("Despar");
+        Supermarket s1 = Supermarket.SupermarketBuilder.builder().setName("Coop").build();
+        Supermarket s2 = Supermarket.SupermarketBuilder.builder().setName("Despar").build();
 
-        Macelleria m = new Macelleria(s1);
-        Product bistecca = new Product("bistecca", 4f, 20, m);
-        Product wurstel = new Product("wurstel", 3f, 15, m);
-        List<Product> pm = Arrays.asList(bistecca, wurstel);
+        Reparto m = Reparto.RepartoBuilder.builder().setSupermarket(s1).setTipologia(TipologiaReparto.MACELLERIA).build();
+        Product bistecca = Product.ProductBuilder.builder().setName("bistecca").setPrice(3f).setQuantity(15).setReparto(m).build();
+        Product cotoletta = Product.ProductBuilder.builder().setName("cotoletta").setPrice(4f).setQuantity(15).setReparto(m).build();
+        List<Product> pm = Arrays.asList(bistecca, cotoletta);
         m.setProducts(pm);
 
-        Panetteria pa = new Panetteria(s1);
-        Product ciabatta = new Product("ciabatta", 2f, 30, pa);
-        Product baguette = new Product("baguette", 3f, 15, pa);
+        Reparto pa = Reparto.RepartoBuilder.builder().setSupermarket(s1).setTipologia(TipologiaReparto.PANETTERIA).build();
+        Product ciabatta = Product.ProductBuilder.builder().setName("ciabatta").setPrice(2f).setQuantity(30).setReparto(pa).build();
+        Product baguette = Product.ProductBuilder.builder().setName("baguette").setPrice(3f).setQuantity(15).setReparto(pa).build();
         List<Product> ppa = Arrays.asList(ciabatta, baguette);
         pa.setProducts(ppa);
 
         s1.addReparto(m);
         s1.addReparto(pa);
 
-        Pescheria pe = new Pescheria(s2);
-        Product orata = new Product("orata", 10f, 10, pe);
-        Product branzino = new Product("branzino", 8f, 9, pe);
+        Reparto pe = Reparto.RepartoBuilder.builder().setSupermarket(s2).setTipologia(TipologiaReparto.PESCHERIA).build();
+        Product orata = Product.ProductBuilder.builder().setName("orata").setPrice(10f).setQuantity(10).setReparto(pe).build();
+        Product branzino = Product.ProductBuilder.builder().setName("branzino").setPrice(8f).setQuantity(9).setReparto(pe).build();
         List<Product> pp = Arrays.asList(orata, branzino);
         pe.setProducts(pp);
         s2.addReparto(pe);
@@ -68,7 +66,7 @@ public class SupermarketRunner {
         supermarketList.add(s1);
         supermarketList.add(s2);
 
-        SupermarketPrinter manager = new SupermarketPrinter(supermarketList);
+        SupermarketUI managerUI = SupermarketUI.newInstance(supermarketList);
 
         while (flag) {
             if (logged) {
@@ -99,28 +97,28 @@ public class SupermarketRunner {
                         flag = false;
                         break;
                     case "S1":
-                        manager.printGetSupermarketListByProductName(tokens[1]);
+                        managerUI.printGetSupermarketListByProductName(tokens[1]);
                         break;
                     case "S2":
-                        manager.printGetProductByNameAndSupermarket(tokens[1], tokens[2]);
+                        managerUI.printGetProductByNameAndSupermarket(tokens[1], tokens[2]);
                         break;
                     case "S3":
-                        manager.printGetListProductBySupermarket(tokens[1]);
+                        managerUI.printGetListProductBySupermarket(tokens[1]);
                         break;
                     case "S4":
-                        manager.printCheckRepartoInSupermarket(tokens[1], tokens[2]);
+                        managerUI.printCheckRepartoInSupermarket(tokens[1], tokens[2]);
                         break;
                     case "BUY":
-                        manager.printBuyProduct(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
+                        managerUI.printBuyProduct(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
                         break;
                     case "CARRELLO":
-                        manager.printProductsInCarrello();
+                        managerUI.printProductsInCarrello();
                         break;
                     case "REMOVE":
-                        manager.printRemoveProductsFromCarrello(tokens[1], Integer.parseInt(tokens[2]));
+                        managerUI.printRemoveProductsFromCarrello(tokens[1], Integer.parseInt(tokens[2]));
                         break;
                     case "CHECKOUT":
-                        manager.printCheckoutCarrello();
+                        managerUI.printCheckoutCarrello();
                         break;
                     default:
                         System.out.println("Unknown command, please use one of these: EXIT - LOGOUT - S1 - S2 - S3 - S4 -" +
@@ -131,7 +129,7 @@ public class SupermarketRunner {
                 System.out.println("Please insert a username:");
                 user = scanner.nextLine();
                 logged = true;
-                manager.printNewUser(user);
+                managerUI.printNewUser(user);
             }
         }
     }

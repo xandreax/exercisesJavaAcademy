@@ -108,12 +108,7 @@ public class ZooManager {
         if (recinto.getAnimaliList().stream().noneMatch(animale -> animale.getNome().equals(nomeAnimale))) {
             throw new AnimalNotFoundException("animal not found with name: " + nomeAnimale);
         }
-
-        if (recinto.getOrarioDiApertura().isBefore(now) && recinto.getOrarioDiChiusura().isAfter(now)) {
-            return true;
-        }
-        return false;
-
+        return recinto.getOrarioDiApertura().isBefore(now) && recinto.getOrarioDiChiusura().isAfter(now);
     }
 
     public List<Animale> findAnimalListByZoo(String zooName) throws ZooNotFoundException {

@@ -8,12 +8,20 @@ import org.example.supermarketexercise.exceptions.TipologiaRepartoNotFoundExcept
 
 import java.util.List;
 
-public class SupermarketPrinter {
+public class SupermarketUI {
 
     private SupermarketManager manager;
+    private static SupermarketUI instance;
 
-    public SupermarketPrinter(List<Supermarket> supermarketList) {
+    private SupermarketUI(List<Supermarket> supermarketList) {
         this.manager = new SupermarketManager(supermarketList);
+    }
+
+    public static SupermarketUI newInstance(List<Supermarket> supermarketList){
+        if(instance == null){
+            instance = new SupermarketUI(supermarketList);
+        }
+        return instance;
     }
 
     public void printGetSupermarketListByProductName(String productName) {

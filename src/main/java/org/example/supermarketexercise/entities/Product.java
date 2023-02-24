@@ -1,26 +1,10 @@
 package org.example.supermarketexercise.entities;
 
-import org.example.supermarketexercise.entities.reparti.Reparto;
-
 public class Product {
     private String name;
     private float price;
     private int quantity;
     private Reparto reparto;
-
-    public Product(String name, float price, int quantity, Reparto reparto) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.reparto = reparto;
-    }
-
-    public Product (Product p){
-        this.name = p.getName();
-        this.quantity = p.getQuantity();
-        this.price = p.getPrice();
-        this.reparto = p.getReparto();
-    }
 
     public float getPrice() {
         return price;
@@ -47,5 +31,42 @@ public class Product {
         return name + " price=" + price +
                 ", quantity=" + quantity +
                 ", reparto=" + reparto;
+    }
+
+    public static class ProductBuilder{
+
+        private final Product product;
+
+        private ProductBuilder() {
+            this.product = new Product();
+        }
+
+        public static ProductBuilder builder() {
+            return new ProductBuilder();
+        }
+
+        public ProductBuilder setName(String name){
+            this.product.name = name;
+            return this;
+        }
+
+        public ProductBuilder setPrice(float price){
+            this.product.price = price;
+            return this;
+        }
+
+        public ProductBuilder setQuantity (int quantity){
+            this.product.quantity = quantity;
+            return this;
+        }
+
+        public ProductBuilder setReparto (Reparto reparto){
+            this.product.reparto = reparto;
+            return this;
+        }
+
+        public Product build(){
+            return this.product;
+        }
     }
 }
